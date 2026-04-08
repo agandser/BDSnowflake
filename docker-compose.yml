@@ -1,0 +1,24 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bdsnowflake-postgres
+    environment:
+      POSTGRES_DB: bdsnowflake
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      TZ: Europe/Moscow
+      PGTZ: Europe/Moscow
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - "./исходные данные:/data:ro"
+      - "./sql:/docker-entrypoint-initdb.d:ro"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d bdsnowflake"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  postgres_data:
